@@ -8,7 +8,7 @@ namespace phonetic
 {
 string find(string, string);
 bool isMatch(string, string);
-bool checkPermutation(char, char);
+bool checkByWeight(char, char);
 } // namespace phonetic
 
 size_t split(const string &txt, vector<string> &strs, char ch);

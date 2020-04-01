@@ -24,47 +24,31 @@ string phonetic::find(string text, string word)
     throw exception();
 }
 /**
- function that check permutation of specific chars.
+ function that holds array of alphabetic a-z , every index represents the position on the alphabetic order
+ every value of index holds different counter number , and if two of the chars can be replace by the definition of cases , they will have the same value
+ so in order to check if char can be replace with other char , i'm comparing the weight(value) of them in the alphabetic order.
+ if equal return true otherwise return false
+ value of 0 say that the char isn't active and cannot be replace with any char.
+
+* cases {"v,w", "b,f,p", "g,j", "c,k,q", "s,z", "d,t", "o,u", "i,y"};
  * @param c_search - the char from the specific word in the text
  * @param c_find - the char from the word that we want to find
  * 
- * more details:
- * inside the function i'm holding array of strings that seperated by ','
- * this strings is the cases of chars that can be replace on my searcing.
- * for example "v,w" - so if I get char 'v' on c_search param and in the c_find param I get 'w' , this case is correct and can be replace !
- * 
- * so i'm iterating over the this cases in order to check if the char in c_find is existing in one of those strings
- * after that i'm holding the position of this char in the string (char array) , and then check:
- * if != -1 said that the char was found , and now I can check if c_search param is equal to the other char in this strings
- * if yes , set the flag true and break because there is a match , don't need to check the other chars..
  */
-bool phonetic::checkPermutation(char c_search, char c_find)
+bool phonetic::checkByWeight(char c_search, char c_find)
 {
-    bool flag = false;
-    string cases[] = {"v,w", "b,f,p", "g,j", "c,k,q", "s,z", "d,t", "o,u", "i,y"};
-    for (string str : cases)
-    {
-        int pos = str.find(c_find);
-        if (pos != -1)
-        { // the char was found
-            vector<string> tokens;
-            split(str, tokens, ',');
-            for (string ch : tokens)
-            {
-                //ch is string with one char , the char that I need after the split . so taking on pos 0
-                // if the char that i'm searcing is equal to the other permutation in this specific case , return true
-                if (ch[0] != c_find && ch[0] == c_search)
-                {
-                    flag = true;
-                    break;
-                }
-            }
-            // if flag is true break from the main loop , this if prevent from cases to be with same chars check.(not asked on the assignment)
-            if (flag)
-                break;
-        }
-    }
-    return flag;
+    //          {a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z}
+    int arr[] = {0, 1, 2, 3, 0, 1, 4, 0, 5, 4, 2, 0, 0, 0, 6, 1, 2, 0, 7, 3, 6, 8, 8, 0, 5, 7};
+
+    int index_search = c_search - 'a';
+    int index_find = c_find - 'a';
+
+    if (arr[index_search] == 0 || arr[index_find] == 0) // if some of them is 0 , return false (not active)
+        return false;
+    else if (arr[index_search] == arr[index_find])
+        return true;
+    else
+        return false;
 }
 
 /**
@@ -79,13 +63,13 @@ bool phonetic::isMatch(string toSearch, string toFind)
         return false;
     else
     {
-        //otherwise the sizes is equal so can compare those strings , char by char , and then calling checkPermutation function
+        //otherwise the sizes is equal so can compare those strings , char by char , and then calling checkByWeight function
         for (size_t i = 0; i < toSearch.size(); i++)
         {
             //if chars are equal continue to the next chars.
             if (toSearch[i] == toFind[i])
                 continue;
-            if (!checkPermutation(toSearch[i], toFind[i]))
+            if (!checkByWeight(toSearch[i], toFind[i]))
                 return false;
         }
         return true;
