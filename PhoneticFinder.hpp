@@ -7,7 +7,8 @@ using namespace std;
 namespace phonetic
 {
 string find(string, string);
-bool isMatch(string toSearch, string toFind);
+bool isMatch(string, string);
+bool checkPermutation(char, char);
 } // namespace phonetic
 
 size_t split(const string &txt, vector<string> &strs, char ch);
